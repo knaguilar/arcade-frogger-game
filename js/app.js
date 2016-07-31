@@ -29,17 +29,12 @@ Enemy.prototype.render = function() {
 };
 
 
-// Enemy.prototype.collisions = function(){
-//     width_r = this.x + 50;
-//     width_l = this.x - 50;
-//     height_u = this.y - 40;
-//     height_d = this.y + 40;
-
-//     if( (width_r > player.x || width_l < player.x) && (height_u > player.y || height_d < player.y) ) {
-//         player.x = 200;
-//         player.y = 390;
-//     }
-// }
+Enemy.prototype.collisions = function(){
+    if(this.x > (player.x - 70) && (this.x - 70) < player.x && (this.y + 10) === player.y) {
+        console.log("A bug ate you, start over!");
+        player.reset();
+    }
+}
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -55,8 +50,7 @@ Player.prototype.update = function() {
     if(this.y === -10){
         //TODO: make into an alert
         console.log("You made it through! Congratulations!");
-        this.x = 200;
-        this.y = 390;
+        player.reset();
     }
 }
 
@@ -90,12 +84,17 @@ Player.prototype.handleInput = function(input) {
     //handles movement
 }
 
+Player.prototype.reset = function(){
+    this.x = 200;
+    this.y = 390;
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var bug1 = new Enemy(60);
+var bug1 = new Enemy(60); //80 height difference
 var bug2 = new Enemy(140);
-var bug3 = new Enemy(230);
+var bug3 = new Enemy(220);
 
 var allEnemies = [bug1, bug2, bug3];
 
