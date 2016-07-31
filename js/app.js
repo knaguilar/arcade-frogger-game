@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function(y) {
+var Enemy = function(y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -8,6 +8,9 @@ var Enemy = function(y) {
     this.sprite = 'images/enemy-bug.png';
     this.x = 0;
     this.y = y;
+    this.width = 70;
+    this.height = 10;
+    this.speed = speed;
 };
 
 // Update the enemy's position, required method for game
@@ -16,10 +19,13 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    var random = Math.random() * 100;
-    this.x += random * dt;
+    // TODO: change the last multiplier based on level (increse speed)
+    //velocity ensures a radom speed every time update is called
+    var velocity = this.speed * dt * (Math.random() * 50);
+    this.x += velocity;
     if (this.x > 500){
         this.x = 0;
+        this.y = this.newLocation();
     }
 }
 
@@ -28,36 +34,46 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-
+//Detects if a player is within a certain distance for the bug
+//The player is reset if it is touching any bug.
 Enemy.prototype.collisions = function(){
-    if(this.x > (player.x - 70) && (this.x - 70) < player.x && (this.y + 10) === player.y) {
+    if(this.x > (player.x - this.width) && (this.x - this.width) < player.x && (this.y + this.height) === player.y) {
         console.log("A bug ate you, start over!");
         player.reset();
     }
+}
+
+
+// This method randomly selects a new row for the enemy to appear
+// in once they're gone through the screen and reappear
+//The possible options are found inside rowLocations array
+Enemy.prototype.newLocation = function(){
+    var rowLocations = [60, 140, 220];
+    var random = rowLocations[Math.floor(Math.random() * rowLocations.length)];
+    return random;
 }
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-horn-girl.png';
-    // Starting point of game
     this.x = 200;
     this.y = 390;
 }
 
 Player.prototype.update = function() {
-    // moves around
     if(this.y === -10){
         //TODO: make into an alert
         console.log("You made it through! Congratulations!");
         player.reset();
     }
 }
-
+//Renders the player sprite on the screen
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
+//Based on player input, moves the sprite around the screen within the bounds set
 Player.prototype.handleInput = function(input) {
     switch (input) {
         case "left":
@@ -84,6 +100,9 @@ Player.prototype.handleInput = function(input) {
     //handles movement
 }
 
+//Resets the player to the starting position
+//Use when the player dies by touching a bug or
+//when the player reaches the water
 Player.prototype.reset = function(){
     this.x = 200;
     this.y = 390;
@@ -92,9 +111,10 @@ Player.prototype.reset = function(){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var bug1 = new Enemy(60); //80 height difference
-var bug2 = new Enemy(140);
-var bug3 = new Enemy(220);
+//The game starts with one bug on each row and a random speed
+var bug1 = new Enemy(60, (Math.random() * 10));
+var bug2 = new Enemy(140, (Math.random() * 10));
+var bug3 = new Enemy(220, (Math.random() * 10));
 
 var allEnemies = [bug1, bug2, bug3];
 
