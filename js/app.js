@@ -16,8 +16,8 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    var random = Math.random() * 10;
-    this.x += random;
+    var random = Math.random() * 100;
+    this.x += random * dt;
     if (this.x > 500){
         this.x = 0;
     }
@@ -28,6 +28,18 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+
+// Enemy.prototype.collisions = function(){
+//     width_r = this.x + 50;
+//     width_l = this.x - 50;
+//     height_u = this.y - 40;
+//     height_d = this.y + 40;
+
+//     if( (width_r > player.x || width_l < player.x) && (height_u > player.y || height_d < player.y) ) {
+//         player.x = 200;
+//         player.y = 390;
+//     }
+// }
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -35,16 +47,21 @@ var Player = function() {
     this.sprite = 'images/char-horn-girl.png';
     // Starting point of game
     this.x = 200;
-    this.y = 400;
+    this.y = 390;
 }
 
 Player.prototype.update = function() {
-    //moves around
+    // moves around
+    if(this.y === -10){
+        //TODO: make into an alert
+        console.log("You made it through! Congratulations!");
+        this.x = 200;
+        this.y = 390;
+    }
 }
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    //updates around
 }
 
 Player.prototype.handleInput = function(input) {
@@ -55,7 +72,7 @@ Player.prototype.handleInput = function(input) {
             }
             break;
         case "up":
-            if(this.y > 70) {
+            if(this.y > 50) {
                 this.y -= 80;
             }
             break;
@@ -65,7 +82,7 @@ Player.prototype.handleInput = function(input) {
             }
             break;
         case "down":
-            if(this.y < 400) {
+            if(this.y < 380) {
                 this.y += 80;
             }
             break;
