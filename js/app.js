@@ -43,7 +43,6 @@ Enemy.prototype.collisions = function(){
     }
 }
 
-
 // This method randomly selects a new row for the enemy to appear
 // in once they're gone through the screen and reappear
 //The possible options are found inside rowLocations array
@@ -52,6 +51,9 @@ Enemy.prototype.newLocation = function(){
     var random = rowLocations[Math.floor(Math.random() * rowLocations.length)];
     return random;
 }
+
+// ---------------------------PLAYER CLASS----------------------------------------------------------------
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -59,18 +61,22 @@ var Player = function() {
     this.sprite = 'images/char-horn-girl.png';
     this.x = 200;
     this.y = 390;
+    this.score = 0;
 }
 
 Player.prototype.update = function() {
     if(this.y === -10){
         //TODO: make into an alert
         console.log("You made it through! Congratulations!");
+        this.addScore();
         player.reset();
     }
 }
 //Renders the player sprite on the screen
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.font = "48px serif";
+    ctx.fillText(("Score: " + this.score), 10, 100);
 }
 
 //Based on player input, moves the sprite around the screen within the bounds set
@@ -103,10 +109,16 @@ Player.prototype.handleInput = function(input) {
 //Resets the player to the starting position
 //Use when the player dies by touching a bug or
 //when the player reaches the water
-Player.prototype.reset = function(){
+Player.prototype.reset = function() {
     this.x = 200;
     this.y = 390;
 }
+
+Player.prototype.addScore = function() {
+    this.score+= 10;
+}
+
+// ---------------------------Start of game----------------------------------------------------------------
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
