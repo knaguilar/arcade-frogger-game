@@ -19,40 +19,41 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    // TODO: change the last multiplier based on level (increse speed)
     //velocity ensures a radom speed every time update is called
     var velocity = this.speed * dt * (Math.random() * 50);
     this.x += velocity;
-    if (this.x > 500){
+    if (this.x > 500) {
         this.x = 0;
         this.y = this.newLocation();
     }
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-//Detects if a player is within a certain distance for the bug
-//The player is reset if it is touching any bug.
-Enemy.prototype.collisions = function(){
-    if(this.x > (player.x - this.width) && (this.x - this.width) < player.x && (this.y + this.height) === player.y) {
+//Detects if a player is within a certain distance from the bug
+//The player is reset if it touches any bug.
+//The high score is also determined at this time
+//The player's current score is reset to 0
+Enemy.prototype.collisions = function() {
+    if (this.x > (player.x - this.width) && (this.x - this.width) < player.x && (this.y + this.height) === player.y) {
         console.log("A bug ate you, start over!");
         player.highScore = player.setHighScore();
         player.score = 0;
         player.reset();
     }
-}
+};
 
 // This method randomly selects a new row for the enemy to appear
 // in once they're gone through the screen and reappear
 //The possible options are found inside rowLocations array
-Enemy.prototype.newLocation = function(){
+Enemy.prototype.newLocation = function() {
     var rowLocations = [60, 140, 220];
     var random = rowLocations[Math.floor(Math.random() * rowLocations.length)];
     return random;
-}
+};
 
 // ---------------------------PLAYER CLASS----------------------------------------------------------------
 
@@ -65,50 +66,54 @@ var Player = function() {
     this.y = 390;
     this.score = 0;
     this.highScore = 0;
-}
+};
 
+//Updates the player's position once the player has reached the water
+//It also adds points to the current score
 Player.prototype.update = function() {
-    if(this.y === -10){
+    if (this.y === -10) {
         //TODO: make into an alert
         console.log("You made it through! Congratulations!");
         this.addScore();
-        player.reset();
+        this.reset();
     }
-}
+};
+
 //Renders the player sprite on the screen
+//Renders the current and high score duing the session
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     ctx.font = "30px serif";
     ctx.fillText(("Score: " + this.score), 10, 100);
     ctx.fillText(("High Score: " + this.highScore), 200, 100);
-}
+};
 
 //Based on player input, moves the sprite around the screen within the bounds set
 Player.prototype.handleInput = function(input) {
     switch (input) {
         case "left":
-            if(this.x > 0) {
+            if (this.x > 0) {
                 this.x -= 100;
             }
             break;
         case "up":
-            if(this.y > 50) {
+            if (this.y > 50) {
                 this.y -= 80;
             }
             break;
         case "right":
-            if(this.x < 400) {
+            if (this.x < 400) {
                 this.x += 100;
             }
             break;
         case "down":
-            if(this.y < 380) {
+            if (this.y < 380) {
                 this.y += 80;
             }
             break;
     }
     //handles movement
-}
+};
 
 //Resets the player to the starting position
 //Use when the player dies by touching a bug or
@@ -116,18 +121,21 @@ Player.prototype.handleInput = function(input) {
 Player.prototype.reset = function() {
     this.x = 200;
     this.y = 390;
-}
+};
 
+//Adds points to the player's current score
 Player.prototype.addScore = function() {
-    this.score+= 10;
-}
+    this.score += 10;
+};
 
+//Keeps track of the highest score during the session
+//Gets updated every time the player dies depending on the higher score
 Player.prototype.setHighScore = function() {
-    if(this.score > this.highScore){
+    if (this.score > this.highScore) {
         this.highScore = this.score;
     }
     return this.highScore;
-}
+};
 
 // ---------------------------Start of game----------------------------------------------------------------
 
