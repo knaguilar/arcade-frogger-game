@@ -39,6 +39,8 @@ Enemy.prototype.render = function() {
 Enemy.prototype.collisions = function(){
     if(this.x > (player.x - this.width) && (this.x - this.width) < player.x && (this.y + this.height) === player.y) {
         console.log("A bug ate you, start over!");
+        player.highScore = player.setHighScore();
+        player.score = 0;
         player.reset();
     }
 }
@@ -62,6 +64,7 @@ var Player = function() {
     this.x = 200;
     this.y = 390;
     this.score = 0;
+    this.highScore = 0;
 }
 
 Player.prototype.update = function() {
@@ -77,6 +80,7 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     ctx.font = "48px serif";
     ctx.fillText(("Score: " + this.score), 10, 100);
+    ctx.fillText(("High Score: " + this.highScore), 200, 100);
 }
 
 //Based on player input, moves the sprite around the screen within the bounds set
@@ -116,6 +120,13 @@ Player.prototype.reset = function() {
 
 Player.prototype.addScore = function() {
     this.score+= 10;
+}
+
+Player.prototype.setHighScore = function() {
+    if(this.score > this.highScore){
+        this.highScore = this.score;
+    }
+    return this.highScore;
 }
 
 // ---------------------------Start of game----------------------------------------------------------------
