@@ -78,7 +78,7 @@ Player.prototype.update = function() {
 //Renders the player sprite on the screen
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    ctx.font = "48px serif";
+    ctx.font = "30px serif";
     ctx.fillText(("Score: " + this.score), 10, 100);
     ctx.fillText(("High Score: " + this.highScore), 200, 100);
 }
